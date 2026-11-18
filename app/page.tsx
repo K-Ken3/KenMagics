@@ -1,17 +1,43 @@
-import { Container } from '@/components/ui/Container';
+import { Preloader } from '@/components/motion/Preloader';
+import { SmoothScroll } from '@/components/motion/SmoothScroll';
+import { CustomCursor } from '@/components/motion/CustomCursor';
+import { PageTransition } from '@/components/motion/PageTransition';
+import { Header } from '@/components/sections/Header';
+import { Hero } from '@/components/sections/Hero';
+import { About } from '@/components/sections/About';
+import { Work } from '@/components/sections/Work';
+import { Services } from '@/components/sections/Services';
+import { Clients } from '@/components/sections/Clients';
+import { Process } from '@/components/sections/Process';
+import { Testimonials } from '@/components/sections/Testimonials';
+import { Contact } from '@/components/sections/Contact';
+import { Footer } from '@/components/sections/Footer';
+import { legacyPortfolio } from '@/lib/data/portfolio';
 
 export default function Home() {
+  const { projects, services, clients, about, testimonials, process, settings, translations } = legacyPortfolio;
+  const visibleProjects = projects.filter((project) => project.status === 'published');
+  const visibleServices = services.filter((service) => service.status === 'published' && service.locale === 'en');
+
   return (
-    <main id="main">
-      <section className="section" style={{ minHeight: '100svh', display: 'grid', alignItems: 'center' }}>
-        <Container>
-          <p className="label">KenDesigns / Design · Digital · Motion</p>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'var(--fs-hero)', letterSpacing: '-0.06em', lineHeight: 0.86, marginBlock: '0.4em' }}>
-            Design, digital and <span className="serif">motion</span>.
-          </h1>
-          <p className="lede">Design system foundation in place.</p>
-        </Container>
-      </section>
-    </main>
+    <>
+      <SmoothScroll />
+      <Preloader />
+      <CustomCursor />
+      <Header email={settings.email} />
+      <PageTransition>
+        <main id="main">
+          <Hero settings={settings} />
+          <About about={about} settings={settings} />
+          <Work projects={visibleProjects} />
+          <Services services={visibleServices} />
+          <Clients clients={clients} settings={settings} />
+          <Process steps={process} />
+          <Testimonials testimonials={testimonials} />
+          <Contact settings={settings} translations={translations} />
+        </main>
+        <Footer settings={settings} />
+      </PageTransition>
+    </>
   );
 }
