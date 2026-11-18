@@ -4,7 +4,7 @@ import { getAnonKey, getSupabaseUrl, hasPublicSupabaseEnv } from '@/lib/supabase
 
 export async function middleware(request: NextRequest) {
   if (!hasPublicSupabaseEnv) {
-    if (request.nextUrl.pathname.startsWith('/admin')) {
+    if (request.nextUrl.pathname.startsWith('/admin') && request.nextUrl.pathname !== '/admin/login') {
       return NextResponse.redirect(new URL('/', request.url));
     }
     return NextResponse.next();

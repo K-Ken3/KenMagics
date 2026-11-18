@@ -9,19 +9,25 @@ import { Header } from '@/components/sections/Header';
 import { Footer } from '@/components/sections/Footer';
 import { VideoBlock } from '@/components/sections/VideoBlock';
 import { TransitionLink } from '@/components/motion/TransitionLink';
+import { getPortfolio } from '@/lib/data/get-portfolio';
 import { legacyPortfolio } from '@/lib/data/portfolio';
 
 type PageProps = { params: Promise<{ slug: string }> };
 
-const published = legacyPortfolio.projects.filter((project) => project.status === 'published');
+// Build-time slugs from the inherited dataset; new admin projects are
+// generated on demand because dynamicParams is enabled by default.
+const publishedSlugs = legacyPortfolio.projects
+  .filter((project) => project.status === 'published')
+  .map((project) => project.slug);
 
 export function generateStaticParams() {
-  return published.map((project) => ({ slug: project.slug }));
+  return publishedSlugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const project = published.find((item) => item.slug === slug);
+  const { projects } = await getPortfolio();
+  const project = projects.find((item) => item.slug === slug);
   if (!project) return {};
   return {
     title: project.title,
@@ -32,15 +38,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CaseStudyPage({ params }: PageProps) {
   const { slug } = await params;
-  const project = published.find((item) => item.slug === slug);
+  const { projects, settings } = await getPortfolio();
+  const project = projects.find((item) => item.slug === slug);
   if (!project) notFound();
-  const index = published.findIndex((item) => item.slug === slug);
-  const next = published[(index + 1) % published.length];
+  const index = projects.findIndex((item) => item.slug === slug);
+  const next = projects[(index + 1) % projects.length];
 
   return (
     <>
       <SmoothScroll />
-      <Header email={legacyPortfolio.settings.email} />
+      <Header email={settings.email} />
       <PageTransition>
         <main id="main">
           <Container className="case-hero">
@@ -125,7 +132,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
             </div>
           </Container>
         </main>
-        <Footer settings={legacyPortfolio.settings} />
+        <Footer settings={settings} />
       </PageTransition>
     </>
   );

@@ -12,10 +12,10 @@ import { Process } from '@/components/sections/Process';
 import { Testimonials } from '@/components/sections/Testimonials';
 import { Contact } from '@/components/sections/Contact';
 import { Footer } from '@/components/sections/Footer';
-import { legacyPortfolio } from '@/lib/data/portfolio';
+import { getPortfolio } from '@/lib/data/get-portfolio';
 
-export default function Home() {
-  const { projects, services, clients, about, testimonials, process, settings, translations } = legacyPortfolio;
+export default async function Home() {
+  const { projects, services, clients, about, testimonials, process, settings, translations } = await getPortfolio();
   const visibleProjects = projects.filter((project) => project.status === 'published');
   const visibleServices = services.filter((service) => service.status === 'published' && service.locale === 'en');
 
