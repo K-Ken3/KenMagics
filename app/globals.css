@@ -9,7 +9,10 @@
   --grey-muted: #8c8c8c;
   --grey-soft: #5e5e5e;
   --hairline: #2a2a2a;
-  --signal: #b7d36f;
+  --sage: #b7d36f;
+  --clay: #d8a27b;
+  --slate: #8fa6b8;
+  --signal: var(--sage);
 
   --grid-columns: 12;
   --grid-gutter: clamp(12px, 1.6vw, 28px);
@@ -194,6 +197,18 @@ ol {
   grid-column: 1 / 4;
 }
 
+.section-head__index {
+  font-weight: 500;
+}
+
+.section-head--sage .section-head__index { color: var(--sage); }
+.section-head--clay .section-head__index { color: var(--clay); }
+.section-head--slate .section-head__index { color: var(--slate); }
+
+.section-head--sage .section-head__title .serif { color: var(--sage); }
+.section-head--clay .section-head__title .serif { color: var(--clay); }
+.section-head--slate .section-head__title .serif { color: var(--slate); }
+
 .section-head__title {
   grid-column: 4 / 11;
   font-family: var(--font-display), Georgia, serif;
@@ -231,6 +246,10 @@ ol {
   font-weight: 400;
   letter-spacing: -0.03em;
 }
+
+.tone-sage { color: var(--sage); }
+.tone-clay { color: var(--clay); }
+.tone-slate { color: var(--slate); }
 
 .lede {
   max-width: 62ch;
@@ -711,6 +730,25 @@ ol {
   margin-bottom: clamp(40px, 7vw, 96px);
 }
 
+.hero__title .serif {
+  color: var(--sage);
+}
+
+.hero__palette {
+  position: absolute;
+  left: var(--page-margin);
+  bottom: 30px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.hero__palette span {
+  width: 22px;
+  height: 3px;
+  background: currentColor;
+}
+
 .hero__bottom {
   align-items: end;
 }
@@ -782,6 +820,14 @@ ol {
   margin-bottom: 40px;
 }
 
+.about__headline .serif {
+  color: var(--sage);
+}
+
+.about__label {
+  color: var(--sage);
+}
+
 .about__bio {
   max-width: 58ch;
   color: #c9c9c9;
@@ -843,6 +889,10 @@ ol {
   letter-spacing: -0.06em;
   margin-bottom: 12px;
 }
+
+.stats__item:nth-child(3n + 1) .stats__value { color: var(--sage); }
+.stats__item:nth-child(3n + 2) .stats__value { color: var(--clay); }
+.stats__item:nth-child(3n) .stats__value { color: var(--slate); }
 
 /* ============================================================
    12 / Work
@@ -906,6 +956,10 @@ ol {
   background: color-mix(in srgb, var(--ink) 70%, transparent);
   color: var(--paper);
 }
+
+.work__card:nth-child(3n + 1) .work__index { color: var(--sage); }
+.work__card:nth-child(3n + 2) .work__index { color: var(--clay); }
+.work__card:nth-child(3n) .work__index { color: var(--slate); }
 
 .work__meta {
   display: flex;
@@ -979,6 +1033,10 @@ ol {
   padding-block: clamp(22px, 3vw, 38px);
   text-align: left;
 }
+
+.services__list > :nth-child(3n + 1) .services__head > .label:first-child { color: var(--sage); }
+.services__list > :nth-child(3n + 2) .services__head > .label:first-child { color: var(--clay); }
+.services__list > :nth-child(3n) .services__head > .label:first-child { color: var(--slate); }
 
 .services__title {
   font-family: var(--font-display), Georgia, serif;
@@ -1116,6 +1174,10 @@ ol {
   color: var(--grey-soft);
   margin-bottom: clamp(40px, 6vw, 80px);
 }
+
+.process__grid > :nth-child(3n + 1) .process__number { color: var(--sage); }
+.process__grid > :nth-child(3n + 2) .process__number { color: var(--clay); }
+.process__grid > :nth-child(3n) .process__number { color: var(--slate); }
 
 .process__step h3 {
   font-family: var(--font-display), Georgia, serif;

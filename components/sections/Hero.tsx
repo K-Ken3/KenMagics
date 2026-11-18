@@ -72,6 +72,11 @@ export function Hero({ settings }: { settings: SiteSettings }) {
           </div>
         </div>
       </Container>
+      <div className="hero__palette" aria-hidden="true">
+        <span className="tone-sage" />
+        <span className="tone-clay" />
+        <span className="tone-slate" />
+      </div>
       <a className="hero__scroll label" href="#about">
         Scroll to explore <span aria-hidden="true">↓</span>
       </a>

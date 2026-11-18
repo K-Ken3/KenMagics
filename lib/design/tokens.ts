@@ -13,7 +13,13 @@ export const tokens = {
       soft: '#5e5e5e',
       line: '#2a2a2a',
     },
-    /** The only accent. Tiny details only: cursor, status dot, hover underline. */
+    /** Restrained, matching accents: growth, craft and structure. */
+    accent: {
+      sage: '#b7d36f',
+      clay: '#d8a27b',
+      slate: '#8fa6b8',
+    },
+    /** @deprecated Use accent.sage. Kept for existing utility styles. */
     signal: '#b7d36f',
   },
   type: {

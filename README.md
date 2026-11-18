@@ -66,7 +66,7 @@ Deploy to Vercel with the same environment variables. Set `NEXT_PUBLIC_SITE_URL`
 
 ## Design decisions (one line each)
 
-- **Near-black/off-white palette only** — keeps the work the focus and avoids the inherited neon/glass clutter.
+- **Ink/paper base with sage, clay and slate accents** — keeps the page calm while giving design, craft and structure a matching colour cue.
 - **Instrument Serif + Geist** — editorial headline voice with a clean grotesk for interface copy.
 - **12-column hairline grid** — gives large type and imagery a consistent, premium rhythm.
 - **GSAP + ScrollTrigger for scroll, Framer Motion for transitions** — each library handles what it does best.

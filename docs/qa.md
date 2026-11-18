@@ -16,6 +16,14 @@ Automated checks run locally against `http://localhost:3000` in the in-app brows
 | `POST /api/contact` without Supabase env | 503 with clear message |
 | `sitemap.xml` | Generated with home anchors and 11 case-study URLs |
 
+## Colour refinement QA
+
+- Palette: sage `#b7d36f`, clay `#d8a27b` and slate `#8fa6b8` on the existing ink/paper base.
+- Computed-style check confirmed the three colours on the hero, section heading accents, stats, work indices, service numbers and process numbers.
+- Home console errors after refresh: none.
+- Production Lighthouse at `http://localhost:3001`: Accessibility 100, Best Practices 100, SEO 100, no failures.
+- Dev-mode Lighthouse reported SEO 83 because App Router metadata is streamed by `next dev`; production metadata is server-rendered and passes.
+
 ## Not verifiable in this environment
 
 - Lighthouse Performance (the tool does not emulate a mobile device or run a performance benchmark).
