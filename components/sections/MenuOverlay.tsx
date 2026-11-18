@@ -3,11 +3,13 @@
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { LogoMark } from '@/components/ui/LogoMark';
 import { navigation } from '@/lib/navigation';
+import type { SiteSettings } from '@/lib/types';
 
-type MenuOverlayProps = { open: boolean; onClose: () => void };
+type MenuOverlayProps = { open: boolean; onClose: () => void; settings: SiteSettings };
 
-export function MenuOverlay({ open, onClose }: MenuOverlayProps) {
+export function MenuOverlay({ open, onClose, settings }: MenuOverlayProps) {
   const firstLink = useRef<HTMLAnchorElement>(null);
   const reduced = useReducedMotion();
 
@@ -52,8 +54,12 @@ export function MenuOverlay({ open, onClose }: MenuOverlayProps) {
           exit={reduced ? { opacity: 0 } : { clipPath: 'inset(0 0 100% 0)' }}
           transition={{ duration: reduced ? 0.2 : 0.75, ease: [0.76, 0, 0.24, 1] }}
         >
+          <LogoMark className="menu__watermark" />
           <div className="menu__top shell">
-            <span className="label">KARASIRA Ken / Creative Studio</span>
+            <span className="menu__brand">
+              <LogoMark className="menu__logo" />
+              <span className="label">{settings.content.menuBrand}</span>
+            </span>
             <button type="button" className="menu__close" onClick={onClose} aria-label="Close menu">
               Close <span aria-hidden="true">×</span>
             </button>
@@ -68,15 +74,17 @@ export function MenuOverlay({ open, onClose }: MenuOverlayProps) {
               >
                 <Link ref={index === 0 ? firstLink : undefined} href={item.href} className="menu__link" onClick={onClose}>
                   <span className="menu__index">{item.index}</span>
-                  <span className="menu__label serif">{item.label}</span>
+                  <span className="menu__label serif">
+                    {settings.content.navLabels[index] || item.label}
+                  </span>
                   <span className="menu__arrow" aria-hidden="true">↗</span>
                 </Link>
               </motion.div>
             ))}
           </nav>
           <div className="menu__foot shell label">
-            <span>Kigali, Rwanda</span>
-            <span>© 2026 Ken Karasira</span>
+            <span>{settings.location}</span>
+            <span>{settings.content.copyright}</span>
           </div>
         </motion.div>
       ) : null}

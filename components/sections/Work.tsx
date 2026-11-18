@@ -6,11 +6,14 @@ import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Reveal } from '@/components/motion/Reveal';
 import { TransitionLink } from '@/components/motion/TransitionLink';
-import type { Project } from '@/lib/types';
+import { AccentText } from '@/components/ui/AccentText';
+import { getGsap, isTouch, prefersReducedMotion } from '@/lib/motion/gsap';
+import type { Project, SiteContent } from '@/lib/types';
 
-export function Work({ projects }: { projects: Project[] }) {
+export function Work({ projects, content }: { projects: Project[]; content: SiteContent }) {
   const track = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
+  const [progress, setProgress] = useState(0);
   const [dragging, setDragging] = useState(false);
   const drag = useRef({ x: 0, left: 0 });
 
@@ -35,7 +38,46 @@ export function Work({ projects }: { projects: Project[] }) {
       { index: 0, distance: Number.POSITIVE_INFINITY },
     );
     setActive(nearest.index);
+    const max = element.scrollWidth - element.clientWidth;
+    setProgress(max > 0 ? Math.min(1, Math.max(0, element.scrollLeft / max)) : 0);
   };
+
+  useEffect(() => {
+    const element = track.current;
+    if (!element || isTouch() || prefersReducedMotion()) return;
+    const { gsap } = getGsap();
+    const cleanups: Array<() => void> = [];
+
+    Array.from(element.querySelectorAll<HTMLElement>('.work__card')).forEach((card) => {
+      const image = card.querySelector<HTMLElement>('.work__image');
+      if (!image) return;
+      const rotateX = gsap.quickTo(image, 'rotationX', { duration: 0.7, ease: 'power3.out' });
+      const rotateY = gsap.quickTo(image, 'rotationY', { duration: 0.7, ease: 'power3.out' });
+
+      const onMove = (event: PointerEvent) => {
+        if (event.buttons !== 0) return;
+        const rect = card.getBoundingClientRect();
+        const px = (event.clientX - rect.left) / rect.width;
+        const py = (event.clientY - rect.top) / rect.height;
+        rotateY((px - 0.5) * 7);
+        rotateX((0.5 - py) * 7);
+      };
+      const onLeave = () => {
+        rotateX(0);
+        rotateY(0);
+      };
+
+      card.addEventListener('pointermove', onMove);
+      card.addEventListener('pointerleave', onLeave);
+      cleanups.push(() => {
+        card.removeEventListener('pointermove', onMove);
+        card.removeEventListener('pointerleave', onLeave);
+        gsap.killTweensOf(image);
+      });
+    });
+
+    return () => cleanups.forEach((cleanup) => cleanup());
+  }, [projects.length]);
 
   useEffect(() => {
     const element = track.current;
@@ -51,14 +93,9 @@ export function Work({ projects }: { projects: Project[] }) {
   return (
     <section className="section work" id="work">
       <SectionHeading
-        index="02"
-        label="Selected Work"
-        title={
-          <>
-            Chosen work, <span className="serif">recently</span> made.
-          </>
-        }
-        aside={`${String(projects.length).padStart(2, '0')} projects`}
+        eyebrow={content.workEyebrow}
+        title={<AccentText text={content.workHeadline} />}
+        aside={`${String(projects.length).padStart(2, '0')} ${content.workAsideSuffix}`}
       />
       <Reveal>
         <div
@@ -109,6 +146,10 @@ export function Work({ projects }: { projects: Project[] }) {
           ))}
         </div>
       </Reveal>
+
+      <div className="work__progress" aria-hidden="true">
+        <span style={{ transform: `scaleX(${progress})` }} />
+      </div>
 
       <Container className="work__controls">
         <p className="label work__counter" aria-live="polite">

@@ -51,11 +51,24 @@ const projectSchema = z.object({
   solution: z.string(),
   impact: z.string(),
   needsRealMedia: z.boolean(),
+  gallery: z.string(),
 });
 
 const csv = (value: string) => value.split(',').map((part) => part.trim()).filter(Boolean);
 const lines = (value: string) => value.split('\n').map((part) => part.trim()).filter(Boolean);
 const nullable = (value: string) => value.trim() || null;
+
+const videoUrl = /\.(mp4|webm|mov|m4v)(\?.*)?$/i;
+
+type GalleryItem = { url: string; alt: string; caption: string; poster: string };
+
+const parseGallery = (value: string): GalleryItem[] =>
+  lines(value)
+    .map((line) => {
+      const [url = '', alt = '', caption = '', poster = ''] = line.split('|').map((part) => part.trim());
+      return { url, alt, caption, poster };
+    })
+    .filter((item) => item.url);
 
 export async function saveProject(formData: FormData) {
   const supabase = await adminDb();
@@ -84,6 +97,7 @@ export async function saveProject(formData: FormData) {
     solution: formData.get('solution'),
     impact: formData.get('impact'),
     needsRealMedia: formData.get('needsRealMedia') === 'on',
+    gallery: formData.get('gallery') ?? '',
   });
   if (!parsed.success) throw new Error('Invalid project data: ' + parsed.error.issues[0].message);
   const p = parsed.data;
@@ -115,6 +129,31 @@ export async function saveProject(formData: FormData) {
     needs_real_media: p.needsRealMedia,
   });
   if (error) throw new Error(error.message);
+
+  const media = parseGallery(p.gallery);
+  const mediaIds = media.map((_, index) => `${p.id}--${index + 1}`);
+  if (media.length) {
+    const { error: mediaError } = await supabase.from('project_media').upsert(
+      media.map((item, index) => ({
+        id: mediaIds[index],
+        project_id: p.id,
+        type: videoUrl.test(item.url) ? 'video' : 'image',
+        url: item.url,
+        poster: nullable(item.poster),
+        caption: nullable(item.caption),
+        alt: nullable(item.alt),
+        sort_order: index,
+      })),
+    );
+    if (mediaError) throw new Error(mediaError.message);
+  }
+
+  const staleIds = supabase.from('project_media').delete().eq('project_id', p.id);
+  const { error: staleError } = media.length
+    ? await staleIds.not('id', 'in', `(${mediaIds.join(',')})`)
+    : await staleIds;
+  if (staleError) throw new Error(staleError.message);
+
   refresh();
   redirect('/admin/projects?saved=1');
 }
@@ -248,6 +287,89 @@ export async function saveSettings(formData: FormData) {
   if (error) throw new Error(error.message);
   refresh();
   redirect('/admin/settings?saved=1');
+}
+
+const siteCopyTextKeys = [
+  'tagline',
+  'copyright',
+  'menuBrand',
+  'headerWordmark',
+  'headerWordmarkAccent',
+  'preloaderWordmark',
+  'preloaderTagline',
+  'preloaderStatus',
+  'heroBadgeText',
+  'heroScrollLabel',
+  'aboutEyebrow',
+  'aboutCaption',
+  'aboutHeadline',
+  'disciplinesLabel',
+  'toolsLabel',
+  'workEyebrow',
+  'workHeadline',
+  'workAsideSuffix',
+  'servicesEyebrow',
+  'servicesHeadline',
+  'servicesAside',
+  'clientsEyebrow',
+  'clientsIntro',
+  'clientsSeparator',
+  'disciplinesSeparator',
+  'processEyebrow',
+  'processHeadline',
+  'processAside',
+  'testimonialsEyebrow',
+  'testimonialsHeadline',
+  'contactEyebrow',
+  'contactHeadline',
+  'contactAside',
+  'contactNote',
+  'contactResponse',
+  'contactEmailLabel',
+  'contactWhatsappLabel',
+  'contactLocationLabel',
+  'contactSubmitLabel',
+  'footerGhost',
+  'footerTagline',
+  'footerBackToTop',
+  'caseStudyLabel',
+  'caseStudyNotesLabel',
+  'caseStudyNextLabel',
+  'caseStudyLiveLabel',
+  'caseStudyClientLabel',
+  'caseStudyYearLabel',
+  'caseStudyRoleLabel',
+  'caseStudyTagsLabel',
+  'caseStudyGalleryLabel',
+  'caseStudyOverviewLabel',
+  'caseStudyChallengeLabel',
+  'caseStudyApproachLabel',
+  'caseStudyOutcomeLabel',
+] as const;
+
+const siteCopyListKeys = ['navLabels', 'tickerTop', 'tickerBottom', 'contactServices', 'contactBudgets'] as const;
+
+export async function saveSiteCopy(formData: FormData) {
+  const supabase = await adminDb();
+  const values = Object.fromEntries(formData.entries());
+  const content: Record<string, string | string[]> = {};
+
+  for (const key of siteCopyTextKeys) {
+    const value = String(values[key] ?? '');
+    if (value.length > 4000) throw new Error(`${key} is too long.`);
+    content[key] = value;
+  }
+  for (const key of siteCopyListKeys) {
+    content[key] = String(values[key] ?? '')
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean);
+  }
+
+  const { error } = await supabase.from('site_settings').upsert({ id: 'default', content });
+  if (error) throw new Error(error.message);
+  refresh();
+  redirect('/admin/settings?saved=copy');
 }
 
 const aboutSchema = z.object({

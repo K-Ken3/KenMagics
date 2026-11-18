@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import type { Testimonial } from '@/lib/types';
+import { AccentText } from '@/components/ui/AccentText';
+import type { SiteContent, Testimonial } from '@/lib/types';
 
-export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) {
+export function Testimonials({ testimonials, content }: { testimonials: Testimonial[]; content: SiteContent }) {
   const [active, setActive] = useState(0);
   const reduced = useReducedMotion();
   const current = testimonials[active];
@@ -17,13 +18,8 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
   return (
     <section className="section testimonials" id="testimonials">
       <SectionHeading
-        index="06"
-        label="Feedback"
-        title={
-          <>
-            In their <span className="serif">words</span>.
-          </>
-        }
+        eyebrow={content.testimonialsEyebrow}
+        title={<AccentText text={content.testimonialsHeadline} />}
         aside={`${String(active + 1).padStart(2, '0')} / ${String(testimonials.length).padStart(2, '0')}`}
       />
       <Container>
@@ -36,7 +32,20 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
               exit={reduced ? { opacity: 0 } : { opacity: 0, y: -18 }}
               transition={{ duration: reduced ? 0.18 : 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
-              <p className="testimonials__quote serif">“{current.quote}”</p>
+              <p className="testimonials__quote serif">
+                “{current.quote.split(' ').map((word, index, words) => (
+                  <Fragment key={`${current.id}-${word}-${index}`}>
+                    <motion.span
+                      className="quote-word"
+                      initial={reduced ? false : { opacity: 0, y: 18, rotate: 2 }}
+                      animate={{ opacity: 1, y: 0, rotate: 0 }}
+                      transition={{ delay: reduced ? 0 : 0.06 + index * 0.022, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      {word}
+                    </motion.span>
+                    {index < words.length - 1 ? ' ' : '”'}
+                  </Fragment>
+                ))}</p>
               <footer className="testimonials__author">
                 <span>{current.name}</span>
                 <span className="muted">{[current.role, current.company].filter(Boolean).join(' · ')}</span>

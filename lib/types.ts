@@ -106,6 +106,69 @@ export interface Stat {
   value: string;
 }
 
+export interface SiteContent {
+  tagline: string;
+  copyright: string;
+  navLabels: string[];
+  menuBrand: string;
+  headerWordmark: string;
+  headerWordmarkAccent: string;
+  preloaderWordmark: string;
+  preloaderTagline: string;
+  preloaderStatus: string;
+  heroBadgeText: string;
+  heroScrollLabel: string;
+  tickerTop: string[];
+  tickerBottom: string[];
+  aboutEyebrow: string;
+  aboutCaption: string;
+  aboutHeadline: string;
+  disciplinesLabel: string;
+  toolsLabel: string;
+  workEyebrow: string;
+  workHeadline: string;
+  workAsideSuffix: string;
+  servicesEyebrow: string;
+  servicesHeadline: string;
+  servicesAside: string;
+  clientsEyebrow: string;
+  clientsIntro: string;
+  clientsSeparator: string;
+  disciplinesSeparator: string;
+  processEyebrow: string;
+  processHeadline: string;
+  processAside: string;
+  testimonialsEyebrow: string;
+  testimonialsHeadline: string;
+  contactEyebrow: string;
+  contactHeadline: string;
+  contactAside: string;
+  contactNote: string;
+  contactResponse: string;
+  contactEmailLabel: string;
+  contactWhatsappLabel: string;
+  contactLocationLabel: string;
+  contactSubmitLabel: string;
+  contactServices: string[];
+  contactBudgets: string[];
+  footerGhost: string;
+  footerTagline: string;
+  footerBackToTop: string;
+  caseStudyLabel: string;
+  caseStudyNotesLabel: string;
+  caseStudyNextLabel: string;
+  caseStudyLiveLabel: string;
+  caseStudyClientLabel: string;
+  caseStudyYearLabel: string;
+  caseStudyRoleLabel: string;
+  caseStudyTagsLabel: string;
+  caseStudyGalleryLabel: string;
+  caseStudyOverviewLabel: string;
+  caseStudyChallengeLabel: string;
+  caseStudyApproachLabel: string;
+  caseStudyOutcomeLabel: string;
+}
+
 export interface SiteSettings {
   heroHeadlinePrefix: string;
   heroHeadlineAccent: string;
@@ -121,6 +184,7 @@ export interface SiteSettings {
   seoTitle: string;
   seoDescription: string;
   ogImage: string;
+  content: SiteContent;
 }
 
 export interface Translations {

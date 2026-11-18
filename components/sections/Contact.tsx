@@ -4,21 +4,15 @@ import { useState } from 'react';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Magnetic } from '@/components/motion/Magnetic';
+import { AccentText } from '@/components/ui/AccentText';
 import type { SiteSettings, Translations } from '@/lib/types';
 
 type Status = 'idle' | 'sending' | 'sent' | 'error';
 
-const serviceOptions = [
-  'Full-Stack Web Development',
-  'CapCut & Premiere Video Editing',
-  'Photoshop Graphic Design',
-  'Video Sound Placement',
-  'UI/UX & Brand Identity',
-];
-
 export function Contact({ settings, translations }: { settings: SiteSettings; translations: Translations }) {
   const [status, setStatus] = useState<Status>('idle');
   const [error, setError] = useState('');
+  const content = settings.content;
   const en = translations.en as { contact?: Record<string, string> };
   const sentLabel = en.contact?.sentSuccess ?? 'Message sent.';
 
@@ -46,23 +40,18 @@ export function Contact({ settings, translations }: { settings: SiteSettings; tr
   return (
     <section className="section contact" id="contact">
       <SectionHeading
-        index="07"
-        label="Contact"
-        title={
-          <>
-            Let&apos;s make something <span className="serif">worth keeping</span>.
-          </>
-        }
-        aside="Kigali / Remote"
+        eyebrow={content.contactEyebrow}
+        title={<AccentText text={content.contactHeadline} />}
+        aside={content.contactAside}
       />
       <Container className="contact__grid">
         <div className="contact__details">
           <div>
-            <p className="label">Direct email</p>
+            <p className="label">{content.contactEmailLabel}</p>
             <a className="contact__big link-sweep" href={`mailto:${settings.email}`}>{settings.email}</a>
           </div>
           <div>
-            <p className="label">WhatsApp</p>
+            <p className="label">{content.contactWhatsappLabel}</p>
             <a
               className="link-sweep"
               href={`https://wa.me/${settings.whatsapp}`}
@@ -73,10 +62,10 @@ export function Contact({ settings, translations }: { settings: SiteSettings; tr
             </a>
           </div>
           <div>
-            <p className="label">Based in</p>
+            <p className="label">{content.contactLocationLabel}</p>
             <p>{settings.location}</p>
           </div>
-          <p className="contact__note">{en.contact?.subtitle}</p>
+          <p className="contact__note">{content.contactNote || en.contact?.subtitle}</p>
         </div>
 
         <form className="contact__form" onSubmit={onSubmit}>
@@ -95,7 +84,7 @@ export function Contact({ settings, translations }: { settings: SiteSettings; tr
               <span className="label">Service needed</span>
               <select name="service" required defaultValue="">
                 <option value="" disabled>Select a service...</option>
-                {serviceOptions.map((option) => (
+                {content.contactServices.map((option) => (
                   <option key={option}>{option}</option>
                 ))}
               </select>
@@ -104,9 +93,9 @@ export function Contact({ settings, translations }: { settings: SiteSettings; tr
               <span className="label">Project budget</span>
               <select name="budget">
                 <option value="">Select budget range...</option>
-                <option>Under $1,000</option>
-                <option>$1,000 – $5,000</option>
-                <option>$5,000+</option>
+                {content.contactBudgets.map((option) => (
+                  <option key={option}>{option}</option>
+                ))}
               </select>
             </label>
           </div>
@@ -123,12 +112,12 @@ export function Contact({ settings, translations }: { settings: SiteSettings; tr
           <div className="contact__submit">
             <Magnetic>
               <button type="submit" className="button" disabled={status === 'sending'} data-cursor="Send">
-                {status === 'sending' ? 'Sending…' : 'Send message'}
+                {status === 'sending' ? 'Sending…' : content.contactSubmitLabel}
                 <span className="button__arrow" aria-hidden="true">↗</span>
               </button>
             </Magnetic>
             <p className="label" role="status">
-              {status === 'sent' ? sentLabel : status === 'error' ? error : 'Response within two working days.'}
+              {status === 'sent' ? sentLabel : status === 'error' ? error : content.contactResponse}
             </p>
           </div>
         </form>

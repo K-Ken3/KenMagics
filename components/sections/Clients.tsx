@@ -4,14 +4,15 @@ import type { Client, SiteSettings } from '@/lib/types';
 
 /* TODO: replace typographic client names with supplied real logo files once available. */
 export function Clients({ clients, settings }: { clients: Client[]; settings: SiteSettings }) {
+  const content = settings.content;
   return (
     <section className="section section--tight clients" id="clients" aria-label="Clients and disciplines">
       <Container>
-        <p className="label">04 / Clients</p>
-        <p className="clients__intro">Brands and collaborators I have worked with.</p>
+        <p className="label">{content.clientsEyebrow}</p>
+        <p className="clients__intro">{content.clientsIntro}</p>
       </Container>
-      <Marquee items={clients.map((client) => client.name)} separator="·" />
-      <Marquee items={settings.disciplines} reverse separator="✦" className="marquee--soft" />
+      <Marquee items={clients.map((client) => client.name)} separator={content.clientsSeparator} />
+      <Marquee items={settings.disciplines} reverse separator={content.disciplinesSeparator} className="marquee--soft" />
     </section>
   );
 }

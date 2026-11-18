@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { LogoMark } from '@/components/ui/LogoMark';
 
 export const NAVIGATE_EVENT = 'kd:navigate';
 
@@ -44,7 +45,7 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
             transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
             aria-hidden="true"
           >
-            <span className="serif">Ken.</span>
+            <LogoMark className="transition-wipe__logo" />
           </motion.div>
         ) : null}
       </AnimatePresence>

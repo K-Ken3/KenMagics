@@ -39,6 +39,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function CaseStudyPage({ params }: PageProps) {
   const { slug } = await params;
   const { projects, settings } = await getPortfolio();
+  const content = settings.content;
   const project = projects.find((item) => item.slug === slug);
   if (!project) notFound();
   const index = projects.findIndex((item) => item.slug === slug);
@@ -47,20 +48,20 @@ export default async function CaseStudyPage({ params }: PageProps) {
   return (
     <>
       <SmoothScroll />
-      <Header email={settings.email} />
+      <Header settings={settings} />
       <PageTransition>
         <main id="main">
           <Container className="case-hero">
             <p className="label">
-              {String(index + 1).padStart(2, '0')} / Case study — {project.category}
+              {String(index + 1).padStart(2, '0')} / {content.caseStudyLabel} — {project.category}
             </p>
             <h1 className="case-hero__title">{project.title}</h1>
             <p className="lede">{project.summary}</p>
             <div className="case-meta">
-              <div><p className="label">Client</p><p>{project.client ?? 'Self-directed'}</p></div>
-              <div><p className="label">Year</p><p>{project.year}</p></div>
-              <div><p className="label">Role</p><p>{project.role ?? 'Design & build'}</p></div>
-              <div><p className="label">Tags</p><p>{project.tags.slice(0, 3).join(' / ')}</p></div>
+              <div><p className="label">{content.caseStudyClientLabel}</p><p>{project.client ?? 'Self-directed'}</p></div>
+              <div><p className="label">{content.caseStudyYearLabel}</p><p>{project.year}</p></div>
+              <div><p className="label">{content.caseStudyRoleLabel}</p><p>{project.role ?? 'Design & build'}</p></div>
+              <div><p className="label">{content.caseStudyTagsLabel}</p><p>{project.tags.slice(0, 3).join(' / ')}</p></div>
             </div>
           </Container>
 
@@ -74,26 +75,26 @@ export default async function CaseStudyPage({ params }: PageProps) {
 
           <Container className="section section--tight">
             <div className="case-body">
-              <p className="label case-body__heading">Project notes</p>
+              <p className="label case-body__heading">{content.caseStudyNotesLabel}</p>
               <div className="case-body__copy">
                 {project.longDescription ? (
                   <section>
-                    <h2>Overview</h2>
+                    <h2>{content.caseStudyOverviewLabel}</h2>
                     <p>{project.longDescription}</p>
                   </section>
                 ) : null}
                 {project.challenge ? (
-                  <section><h2>Challenge</h2><p>{project.challenge}</p></section>
+                  <section><h2>{content.caseStudyChallengeLabel}</h2><p>{project.challenge}</p></section>
                 ) : null}
                 {project.solution ? (
-                  <section><h2>Approach</h2><p>{project.solution}</p></section>
+                  <section><h2>{content.caseStudyApproachLabel}</h2><p>{project.solution}</p></section>
                 ) : null}
                 {project.impact ? (
-                  <section><h2>Outcome</h2><p>{project.impact}</p></section>
+                  <section><h2>{content.caseStudyOutcomeLabel}</h2><p>{project.impact}</p></section>
                 ) : null}
                 {project.externalLink && project.externalLink !== '#' ? (
                   <a className="button" href={project.externalLink} target="_blank" rel="noopener noreferrer">
-                    Launch live application <span aria-hidden="true">↗</span>
+                    {content.caseStudyLiveLabel} <span aria-hidden="true">↗</span>
                   </a>
                 ) : null}
               </div>
@@ -102,7 +103,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
 
           {project.gallery.length ? (
             <Container className="section section--tight">
-              <p className="label" style={{ marginBottom: 32 }}>Gallery</p>
+              <p className="label" style={{ marginBottom: 32 }}>{content.caseStudyGalleryLabel}</p>
               <div className="case-gallery">
                 {project.gallery.map((item) =>
                   item.type === 'video' && item.url.endsWith('.mp4') ? (
@@ -123,7 +124,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
           <Container className="section section--tight">
             <hr className="hairline" />
             <div className="work__meta" style={{ marginTop: 36 }}>
-              <p className="label">Next project</p>
+              <p className="label">{content.caseStudyNextLabel}</p>
               {next ? (
                 <TransitionLink href={`/work/${next.slug}`} className="link-sweep" data-cursor="Next">
                   {next.title} ↗

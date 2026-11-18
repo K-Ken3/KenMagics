@@ -25,6 +25,8 @@ export const tokens = {
   type: {
     display: 'var(--font-display)',
     sans: 'var(--font-sans)',
+    /** Secondary text voice: technical grotesk for labels, tickers and wordmarks. */
+    grotesk: 'var(--font-grotesk)',
     size: {
       xs: 'clamp(0.6875rem, 0.66rem + 0.12vw, 0.75rem)',
       sm: 'clamp(0.8125rem, 0.78rem + 0.16vw, 0.875rem)',

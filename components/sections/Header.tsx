@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { Container } from '@/components/ui/Container';
+import { LogoMark } from '@/components/ui/LogoMark';
+import type { SiteSettings } from '@/lib/types';
 import { MenuOverlay } from './MenuOverlay';
 
-export function Header({ email }: { email: string }) {
+export function Header({ settings }: { settings: SiteSettings }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -19,13 +21,17 @@ export function Header({ email }: { email: string }) {
     <>
       <header className={`header${scrolled ? ' header--scrolled' : ''}`}>
         <Container className="header__inner">
-          <a href="/" className="header__mark" aria-label="KenDesigns home">
-            KEN<span className="serif">.</span>
+          <a href="/" className="header__mark" aria-label="KenDesigns home" data-cursor="Home">
+            <LogoMark className="header__logo" priority />
+            <span className="header__wordmark" aria-hidden="true">
+              {settings.content.headerWordmark}
+              <span>{settings.content.headerWordmarkAccent}</span>
+            </span>
           </a>
-          <p className="header__meta label">Design · Digital · Motion</p>
+          <p className="header__meta label">{settings.content.tagline}</p>
           <div className="header__actions">
-            <a className="header__email link-sweep" href={`mailto:${email}`}>
-              {email}
+            <a className="header__email link-sweep" href={`mailto:${settings.email}`}>
+              {settings.email}
             </a>
             <button
               type="button"
@@ -42,7 +48,7 @@ export function Header({ email }: { email: string }) {
           </div>
         </Container>
       </header>
-      <MenuOverlay open={open} onClose={() => setOpen(false)} />
+      <MenuOverlay open={open} onClose={() => setOpen(false)} settings={settings} />
     </>
   );
 }

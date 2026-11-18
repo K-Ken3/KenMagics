@@ -24,6 +24,7 @@ type ProjectValues = {
   challenge: string;
   solution: string;
   impact: string;
+  gallery: string;
   needsRealMedia: boolean;
 };
 
@@ -84,6 +85,10 @@ export function ProjectForm({ project }: { project: ProjectValues }) {
         {area('challenge', 'Challenge')}
         {area('solution', 'Solution')}
         {area('impact', 'Impact')}
+        <label className="admin-span">
+          <span className="label">Gallery — one per line: URL | Alt | Caption | Poster (poster optional)</span>
+          <textarea name="gallery" rows={5} defaultValue={project.gallery} placeholder="/work/shot-01.jpg | Dashboard overview | Fig. 01" />
+        </label>
       </div>
       <div className="admin-form__checks">
         {check('featured', 'Featured')}

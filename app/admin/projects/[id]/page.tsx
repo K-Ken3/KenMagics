@@ -29,6 +29,7 @@ const blank = {
   challenge: '',
   solution: '',
   impact: '',
+  gallery: '',
   needsRealMedia: false,
 };
 
@@ -50,6 +51,17 @@ export default async function EditProject({ params }: { params: Promise<{ id: st
 
   const { data } = supabase ? await supabase.from('projects').select('*').eq('id', id).maybeSingle() : { data: null };
   if (!data) notFound();
+
+  const { data: mediaRows } = supabase
+    ? await supabase.from('project_media').select('*').eq('project_id', id).order('sort_order')
+    : { data: null };
+  const gallery = (mediaRows ?? [])
+    .map((item) => {
+      const columns = [item.url, item.alt ?? '', item.caption ?? '', item.poster ?? ''];
+      while (columns.length > 1 && !columns[columns.length - 1]) columns.pop();
+      return columns.join(' | ');
+    })
+    .join('\n');
 
   return (
     <section className="admin-page">
@@ -82,6 +94,7 @@ export default async function EditProject({ params }: { params: Promise<{ id: st
           challenge: data.challenge ?? '',
           solution: data.solution ?? '',
           impact: data.impact ?? '',
+          gallery,
           needsRealMedia: data.needs_real_media ?? false,
         }}
       />

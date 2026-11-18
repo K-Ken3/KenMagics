@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Geist, Instrument_Serif } from 'next/font/google';
+import { Geist, Instrument_Serif, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 
 const sans = Geist({
@@ -13,6 +13,12 @@ const display = Instrument_Serif({
   weight: '400',
   style: ['normal', 'italic'],
   variable: '--font-display',
+  display: 'swap',
+});
+
+const grotesk = Space_Grotesk({
+  subsets: ['latin'],
+  variable: '--font-grotesk',
   display: 'swap',
 });
 
@@ -33,7 +39,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${sans.variable} ${display.variable}`}>
+    <html lang="en" className={`${sans.variable} ${display.variable} ${grotesk.variable}`}>
       <body>
         <a className="skip-link" href="#main">
           Skip to content

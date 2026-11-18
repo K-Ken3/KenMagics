@@ -1,5 +1,6 @@
 import live from './legacy-live.generated.json';
 import { localProjects, localServices, localTestimonial } from './legacy-local';
+import { defaultSiteContent } from '@/lib/content/defaults';
 import type {
   About,
   Client,
@@ -256,6 +257,7 @@ export const legacyPortfolio: PortfolioData = {
     seoDescription:
       'KenDesigns — design, digital and motion. Web engineering, video editing, graphic design and social content from Kigali, Rwanda.',
     ogImage: '/og.png',
+    content: defaultSiteContent,
   },
   translations: live.translations as PortfolioData['translations'],
 };

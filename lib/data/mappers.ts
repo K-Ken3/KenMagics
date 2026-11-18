@@ -9,6 +9,7 @@ import type {
   SiteSettings,
   Testimonial,
 } from '@/lib/types';
+import { resolveSiteContent } from '@/lib/content/defaults';
 
 type Row = Record<string, unknown>;
 
@@ -128,6 +129,7 @@ export function mapSettings(row: Row): SiteSettings {
     seoTitle: str(row.seo_title),
     seoDescription: str(row.seo_description),
     ogImage: str(row.og_image, '/og.png'),
+    content: resolveSiteContent(row.content),
   };
 }
 

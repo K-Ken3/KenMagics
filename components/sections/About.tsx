@@ -3,13 +3,15 @@ import { Container } from '@/components/ui/Container';
 import { Reveal } from '@/components/motion/Reveal';
 import { Parallax } from '@/components/motion/Parallax';
 import { AnimatedNumber } from '@/components/motion/AnimatedNumber';
+import { AccentText } from '@/components/ui/AccentText';
 import type { About as AboutData, SiteSettings } from '@/lib/types';
 
 export function About({ about, settings }: { about: AboutData; settings: SiteSettings }) {
+  const content = settings.content;
   return (
     <section className="section about" id="about">
       <Container>
-        <p className="label about__label">01 / About</p>
+        <p className="label about__label">{content.aboutEyebrow}</p>
         <div className="grid-12 about__grid">
           <Reveal className="about__media" clip>
             <div className="about__frame">
@@ -25,13 +27,13 @@ export function About({ about, settings }: { about: AboutData; settings: SiteSet
                 />
               </Parallax>
             </div>
-            <p className="label about__caption">KARASIRA Ken — {about.currentRole}</p>
+            <p className="label about__caption">{content.aboutCaption} — {about.currentRole}</p>
           </Reveal>
 
           <div className="about__copy">
             <Reveal>
               <h2 className="about__headline">
-                Design that gets noticed. <span className="serif">Software</span> that works.
+                <AccentText text={content.aboutHeadline} />
               </h2>
             </Reveal>
             <Reveal delay={0.08}>
@@ -39,7 +41,7 @@ export function About({ about, settings }: { about: AboutData; settings: SiteSet
             </Reveal>
             <div className="about__details">
               <Reveal delay={0.12}>
-                <p className="label">Disciplines</p>
+                <p className="label">{content.disciplinesLabel}</p>
                 <ul className="about__skills">
                   {about.skills.map((skill) => (
                     <li key={skill}>{skill}</li>
@@ -47,7 +49,7 @@ export function About({ about, settings }: { about: AboutData; settings: SiteSet
                 </ul>
               </Reveal>
               <Reveal delay={0.18}>
-                <p className="label">Tools</p>
+                <p className="label">{content.toolsLabel}</p>
                 <p className="about__tools">{about.tools.join(' / ')}</p>
                 {about.timeline.map((entry) => (
                   <div className="about__timeline" key={entry.period}>

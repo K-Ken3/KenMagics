@@ -1,20 +1,16 @@
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Reveal } from '@/components/motion/Reveal';
-import type { ProcessStep } from '@/lib/types';
+import { AccentText } from '@/components/ui/AccentText';
+import type { ProcessStep, SiteContent } from '@/lib/types';
 
-export function Process({ steps }: { steps: ProcessStep[] }) {
+export function Process({ steps, content }: { steps: ProcessStep[]; content: SiteContent }) {
   return (
     <section className="section process" id="process">
       <SectionHeading
-        index="05"
-        label="Process"
-        title={
-          <>
-            A clear way <span className="serif">through</span>.
-          </>
-        }
-        aside="Four steps, no theatre"
+        eyebrow={content.processEyebrow}
+        title={<AccentText text={content.processHeadline} />}
+        aside={content.processAside}
       />
       <Container>
         <div className="process__grid">

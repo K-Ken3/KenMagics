@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { signOut } from './actions';
+import { LogoMark } from '@/components/ui/LogoMark';
 import { getAdminUser } from '@/lib/admin/auth';
 import { hasPublicSupabaseEnv } from '@/lib/supabase/env';
 
@@ -40,7 +41,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div className="admin-shell">
       <aside className="admin-sidebar">
-        <Link href="/admin" className="admin-brand serif">Ken.</Link>
+        <Link href="/admin" className="admin-brand" aria-label="KenDesigns admin">
+          <LogoMark className="admin-brand__logo" />
+          <span className="admin-brand__text">KenDesigns</span>
+        </Link>
         <p className="label">Portfolio CMS</p>
         <nav aria-label="Admin">
           <ul>
