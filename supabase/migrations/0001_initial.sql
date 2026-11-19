@@ -17,6 +17,10 @@ do $$ begin
   create type public.message_status as enum ('new', 'read', 'archived');
 exception when duplicate_object then null; end $$;
 
+do $$ begin
+  create type public.project_kind as enum ('software', 'design');
+exception when duplicate_object then null; end $$;
+
 -- ------------------------------------------------------------
 -- Admin access
 -- Add each authorised email here. Supabase Auth must also have
@@ -69,7 +73,7 @@ create table if not exists public.about (
   bio text not null default '',
   photo text not null default '',
   photo_alt text not null default '',
-  current_role text not null default '',
+  "current_role" text not null default '',
   tools jsonb not null default '[]'::jsonb,
   skills jsonb not null default '[]'::jsonb,
   timeline jsonb not null default '[]'::jsonb,
